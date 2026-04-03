@@ -1,7 +1,5 @@
-import os
-from typing import Optional
 from deepagents import create_deep_agent, SubAgent
-from .prompts import QUEEN_SYSTEM_PROMPT, WORKER_SYSTEM_PROMPT, DRONE_SYSTEM_PROMPT
+from .prompts import QUEEN_SYSTEM_PROMPT_TEMPLATE, WORKER_SYSTEM_PROMPT, DRONE_SYSTEM_PROMPT
 from .backend import SecureFilesystemBackend
 from .tools import check_file_freshness
 from .llm_setup import get_llm
@@ -12,6 +10,7 @@ def create_swarm(target_dir: str, provider: str, queen_model: str, worker_model:
     llm_drone = get_llm(provider, drone_model)
 
     backend = SecureFilesystemBackend(root_dir=target_dir)
+    queen_prompt = QUEEN_SYSTEM_PROMPT_TEMPLATE.format(target_dir=target_dir)
 
     worker_desc = "Technical Writer subagent that reads source code and generates documentation."
     worker = SubAgent(
@@ -30,7 +29,7 @@ def create_swarm(target_dir: str, provider: str, queen_model: str, worker_model:
     )
 
     queen = create_deep_agent(
-        system_prompt=QUEEN_SYSTEM_PROMPT,
+        system_prompt=queen_prompt,
         model=llm_queen,
         backend=backend,
         subagents=[worker, drone],
