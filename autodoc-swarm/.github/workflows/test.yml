@@ -19,7 +19,7 @@ jobs:
       - name: Run AutoDoc Swarm
         uses: ./
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT_TOKEN }}
           provider: 'openrouter'
           queen_model: 'qwen/qwen3.6-plus:free'
           worker_model: 'qwen/qwen3.6-plus:free'
