@@ -32,7 +32,7 @@ class SecureFilesystemBackend(FilesystemBackend):
         # Check if filename matches blocked patterns
         filename = path.name
         for pattern in self.blocked_patterns:
-            if pattern.match(filename):
+            if pattern.search(filename):
                 return False
 
         return True
@@ -75,7 +75,8 @@ class SecureFilesystemBackend(FilesystemBackend):
                 if not blocked:
                     allowed_items.append(item)
             return allowed_items
-        except Exception as e:
-            # We return empty list on error to match the return type expected
-            print(f"Error reading directory: {e}")
+        except FileNotFoundError:
             return []
+        except Exception as e:
+            print(f"Error reading directory: {e}")
+            raise
