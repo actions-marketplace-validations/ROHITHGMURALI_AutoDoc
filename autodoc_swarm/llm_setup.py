@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 from langchain_core.language_models.chat_models import BaseChatModel
 
 def get_llm(provider: str, model: str) -> BaseChatModel:
