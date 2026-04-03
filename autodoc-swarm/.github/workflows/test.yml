@@ -20,9 +20,9 @@ jobs:
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          provider: 'openai'
-          queen_model: 'gpt-4o-mini'
-          worker_model: 'gpt-4o-mini'
-          drone_model: 'gpt-4o-mini'
+          provider: 'openrouter'
+          queen_model: 'qwen/qwen3.6-plus:free'
+          worker_model: 'qwen/qwen3.6-plus:free'
+          drone_model: 'qwen/qwen3.6-plus:free'
           api_key: ${{ secrets.OPENAI_API_KEY }}
           target_dir: './dummy_repo'
