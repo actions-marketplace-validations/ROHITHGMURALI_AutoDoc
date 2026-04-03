@@ -24,6 +24,16 @@ class SecureFilesystemBackend(FilesystemBackend):
 
     def _is_allowed(self, path_str: str) -> bool:
         path = Path(path_str)
+
+        # Reject absolute paths — they escape root_dir confinement
+        # (os.path.join(root, "/abs") returns "/abs", discarding root)
+        if path.is_absolute():
+            return False
+
+        # Reject path traversal attempts
+        if ".." in path.parts:
+            return False
+
         # Check if any part of the path is a blocked directory
         for part in path.parts:
             if part in self.blocked_dirs:
