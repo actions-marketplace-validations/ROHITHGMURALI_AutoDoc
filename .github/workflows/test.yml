@@ -25,4 +25,4 @@ jobs:
           worker_model: 'qwen/qwen3.6-plus:free'
           drone_model: 'qwen/qwen3.6-plus:free'
           api_key: ${{ secrets.OPENAI_API_KEY }}
-          target_dir: './dummy_repo'
+          target_dir: './'
