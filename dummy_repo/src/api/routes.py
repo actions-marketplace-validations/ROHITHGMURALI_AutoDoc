@@ -31,3 +31,18 @@ class APIRouter:
         if path in self.routes:
             return self.routes[path](payload)
         return {"error": "Route not found", "status": 404}
+    
+    def another_handle_request(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processes an incoming request.
+
+        Args:
+            path: The requested URL path.
+            payload: The request body payload.
+
+        Returns:
+            A dictionary containing the response.
+        """
+        if path in self.routes:
+            return self.routes[path](payload)
+        return {"error": "Route not found", "status": 404}
