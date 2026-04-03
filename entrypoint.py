@@ -34,6 +34,10 @@ def configure_git():
     subprocess.run(["git", "config", "--global", "user.name", "AutoDoc Swarm"], check=True)
     subprocess.run(["git", "config", "--global", "user.email", "autodoc-swarm@github.actions"], check=True)
 
+    workspace = os.environ.get("GITHUB_WORKSPACE")
+    if workspace:
+        subprocess.run(["git", "config", "--global", "--add", "safe.directory", workspace], check=True)
+
 def commit_and_push(target_dir):
     try:
         subprocess.run(["git", "add", os.path.join(target_dir, "documentation/")], check=True)
@@ -109,12 +113,19 @@ def main():
             drone_model=drone_model
         )
 
-        response = queen.run(kickoff_msg)
+        response = queen.invoke({"messages": [("user", kickoff_msg)]})
+        try:
+            if isinstance(response, dict) and "messages" in response:
+                final_output = response["messages"][-1].content
+            else:
+                final_output = str(response)
+        except Exception:
+            final_output = str(response)
         print("--- Final Queen Output ---")
-        print(response)
+        print(final_output)
 
         # Write summary
-        write_step_summary(f"## AutoDoc Swarm Execution Complete 🐝\n\n**Models Used:**\n- Queen: `{queen_model}`\n- Worker: `{worker_model}`\n- Drone: `{drone_model}`\n\n**Queen Output:**\n```\n{response}\n```")
+        write_step_summary(f"## AutoDoc Swarm Execution Complete 🐝\n\n**Models Used:**\n- Queen: `{queen_model}`\n- Worker: `{worker_model}`\n- Drone: `{drone_model}`\n\n**Queen Output:**\n```\n{final_output}\n```")
 
         success = commit_and_push(target_dir)
         if success:

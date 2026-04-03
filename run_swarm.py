@@ -38,10 +38,18 @@ def run(
         typer.echo("Executing deep scan and documentation planning...")
         # Start the run
         # Note: We provide a kick-off message to start the autonomous loop
-        response = queen.run("Begin a deep scan of the repository. Evaluate freshness of files and document all code files found according to your directives. Stop when all tasks are complete.")
+        response = queen.invoke({"messages": [("user", "Begin a deep scan of the repository. Evaluate freshness of files and document all code files found according to your directives. Stop when all tasks are complete.")]})
+
+        try:
+            if isinstance(response, dict) and "messages" in response:
+                final_output = response["messages"][-1].content
+            else:
+                final_output = str(response)
+        except Exception:
+            final_output = str(response)
 
         typer.echo("\n--- Final Queen Output ---")
-        typer.echo(response)
+        typer.echo(final_output)
         typer.echo("--------------------------")
 
     except Exception as e:
