@@ -3,8 +3,10 @@ import threading
 import time
 from collections import deque
 
+from langchain_core.rate_limiters import BaseRateLimiter
 
-class MinuteRateLimiter:
+
+class MinuteRateLimiter(BaseRateLimiter):
     """
     Hard-cap rate limiter: allows up to `max_requests` calls within any
     rolling `window_seconds` window. Once the cap is reached, blocks until
